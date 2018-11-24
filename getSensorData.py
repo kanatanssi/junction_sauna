@@ -4,6 +4,7 @@ import time
 from datetime import datetime
 import tzlocal
 
+
 # Return a list of json object containg the sensor data
 def get_sensor_data(sensorname, number):
     sensordata = urllib.request.urlopen(urllib.request.Request(
@@ -20,13 +21,9 @@ def check_for_loyly(measurement1, measurement2):
     first_temp = measurement1['Measurements']['Temperature']['value']
     last_temp = measurement2['Measurements']['Temperature']['value']
 
-    first_unix_timestamp = float(str(measurement1['Timestamp'])) / 1000
-    first_local_timezone = tzlocal.get_localzone()
-    first_local_time = datetime.fromtimestamp(first_unix_timestamp, first_local_timezone)
+    first_local_time = get_localtime_from_measurement(measurement1)
+    second_local_time = get_localtime_from_measurement(measurement2)
 
-    second_unix_timestamp = float(str(measurement2['Timestamp'])) / 1000
-    second_local_timezone = tzlocal.get_localzone()
-    second_local_time = datetime.fromtimestamp(second_unix_timestamp, second_local_timezone)
     print(first_temp, ' at: ', first_local_time.strftime("%Y-%m-%d %H:%M:%S.%f%z (%Z)"), last_temp, ' at: ',
           second_local_time.strftime("%Y-%m-%d %H:%M:%S.%f%z (%Z)"))
 
@@ -36,10 +33,33 @@ def check_for_loyly(measurement1, measurement2):
         return False
 
 
+def check_for_opendoor(measurement1, measurement2):
+    first_temp = measurement1['Measurements']['Relative humidity']['value']
+    last_temp = measurement2['Measurements']['Relative humidity']['value']
+
+    first_local_time = get_localtime_from_measurement(measurement1)
+    second_local_time = get_localtime_from_measurement(measurement2)
+
+    print(first_temp, ' at: ', measurement1['Timestamp'], first_local_time.strftime("%Y-%m-%d %H:%M:%S.%f%z (%Z)"),
+    last_temp, ' at: ', measurement1['Timestamp'], second_local_time.strftime("%Y-%m-%d %H:%M:%S.%f%z (%Z)"))
+
+    if last_temp - first_temp > 1.5:
+        return True
+    else:
+        return False
+
+
+def get_localtime_from_measurement(measurement):
+    unix_timestamp = float(str(measurement['Timestamp'])) / 1000
+    local_timezone = tzlocal.get_localzone()
+    local_time = datetime.fromtimestamp(unix_timestamp, local_timezone)
+    return local_time
+
+
+
 # example usage doing the same thing as before
-'''
 while True:
-    sensordata = get_sensor_data('Stove1', 4)
-    check_for_loyly(sensordata[0], sensordata[-1])
+    sensordata = get_sensor_data('Doorway1', 4)
+    if check_for_opendoor(sensordata[0], sensordata[-1]):
+        print('DOOR OPEN')
     time.sleep(1)
-'''
