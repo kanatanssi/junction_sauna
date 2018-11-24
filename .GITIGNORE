@@ -1,2 +1,3 @@
-# We don't need this
+# We don't need these
 .DS_Store
+__pycache__

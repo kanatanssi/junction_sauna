@@ -58,8 +58,10 @@ def get_localtime_from_measurement(measurement):
 
 
 # example usage doing the same thing as before
-while True:
-    sensordata = get_sensor_data('Doorway1', 4)
-    if check_for_opendoor(sensordata[0], sensordata[-1]):
-        print('DOOR OPEN')
-    time.sleep(1)
+#while True:
+#    sensordata = get_sensor_data('Stove1', 4)
+#    if check_for_opendoor(sensordata[0], sensordata[-1]):
+#        print('DOOR OPEN')
+#    if check_for_loyly(sensordata[0], sensordata[-1]):
+#        print('LOYLY')
+#    time.sleep(1)

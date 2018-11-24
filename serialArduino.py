@@ -35,11 +35,10 @@ def doorOpen():
 
 
 def check_state():
-
-    if(loyly()):
+    if loyly():
         print("loyly")
         return consts.states['s_loyly']
-    if(doorOpen()):
+    if doorOpen():
         print("door open")
         return consts.states['s_openDoor']
 
@@ -82,7 +81,7 @@ while True:
         ## Send the data
         arduino.write(str.encode(str(state)))
         #arduino.write("Hello from Python!")
-        print("sent")
+        print("Sent state " + str(state) + " to arduino")
         data = arduino.readline()
         if data:
             print(data.decode())  # strip out the new lines for now
