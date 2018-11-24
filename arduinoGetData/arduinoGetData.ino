@@ -78,6 +78,8 @@ void loop() {
         //do something
         break;
     }
+    // Make sure the servo is in original position
+    waterServo.write(0);
   }
 }
 
