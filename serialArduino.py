@@ -8,7 +8,7 @@ import serial
 import time
 import struct
 
-ard_connected = False
+ard_connected = True
 
 if(ard_connected):
     arduino = serial.Serial('/dev/cu.usbmodem1411', 115200, timeout=.1)
@@ -84,9 +84,7 @@ while True:
         #arduino.write("Hello from Python!")
         print("sent")
         data = arduino.readline()
-        print("read")
         if data:
-            print("data")
             print(data.decode())  # strip out the new lines for now
             time.sleep(1)
             # (better to do .read() in the long run for this reason
