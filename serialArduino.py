@@ -6,7 +6,8 @@ import serial
 import time
 import struct
 
-ser = serial.Serial('/dev/tty.usbserial', 9600)
+arduino = serial.Serial('/dev/cu.usbmodem1411', 115200, timeout=.1)
+print(arduino.name)
 time.sleep(2)
 
 while True:
@@ -14,8 +15,15 @@ while True:
     ## Get the sensor data
 
     ## recognize if 0 - nothing, 1 - normal, 2 - loyly, 3 - open door
-    ent = 0;
+    ent = 2
 
     ## Send the data
-    ser.write(struct.pack('>B', ent))
-    time.sleep(.1)
+    arduino.write(struct.pack('>B', ent))
+    #arduino.write("Hello from Python!")
+    print("sent")
+    data = arduino.readline()
+    print("read")
+    if data:
+        print("data")
+        print(data)  # strip out the new lines for now
+        # (better to do .read() in the long run for this reason
