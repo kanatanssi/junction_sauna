@@ -18,8 +18,8 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200); // set the baud rate
   //Serial.println("Ready"); // print "Ready" once
+  strip.begin();
   strip.show();
-  Fire(20,100,40);
 }
 
 void loop() {
@@ -31,7 +31,7 @@ void loop() {
     str[1] = '\0';
     Serial.print(str);
 
-    switch(state){
+    /*switch(state){
       case s_nothing:
         Fire(40,70,20);
         break;
@@ -61,7 +61,7 @@ void loop() {
         break;
       default:
         Fire(20,100,40);
-    }
+    }*/
   }
 }
 
@@ -122,13 +122,13 @@ void setPixelHeatColor (int Pixel, byte temperature) {
 void Fade(byte red, byte green, byte blue){
   float r, g, b;
 //fade in:
-  for(int k = 0; k < 256; k=k+1) { 
+  for(int k = 0; k < 256; k=k+2) { 
     r = (k/256.0)*red;
     g = (k/256.0)*green;
     b = (k/256.0)*blue;
     setAll(r,g,b);
     showStrip();
-    //delay(3);
+    delay(50);
   }
   
 //fade out:
@@ -138,7 +138,7 @@ void Fade(byte red, byte green, byte blue){
     b = (k/256.0)*blue;
     setAll(r,g,b);
     showStrip();
-    //delay(3);
+    delay(50);
   }
 }
 

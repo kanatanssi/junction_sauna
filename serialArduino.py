@@ -11,7 +11,7 @@ import struct
 ard_connected = True
 
 if(ard_connected):
-    arduino = serial.Serial('/dev/cu.usbmodem1411', 115200, timeout=.1)
+    arduino = serial.Serial('/dev/cu.usbmodem1411', 115200)
     print(arduino.name)
     time.sleep(2)
 
@@ -62,7 +62,7 @@ def check_state():
     if ent < consts.maxEnt['s_sizzle']:
         print('s_sizzle')
         return consts.states['s_sizzle']
-    return consts.states['hell']
+    return consts.states['s_hell']
 
 
 
