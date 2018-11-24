@@ -4,45 +4,42 @@ import time
 from datetime import datetime
 import tzlocal
 
-while True:
-    returned_data = urllib.request.urlopen(urllib.request.Request(
-        "https://apigtw.vaisala.com/hackjunction2018/saunameasurements/latest?SensorID=Stove1&limit=4",
+# Return a list of json object containg the sensor data
+def get_sensor_data(sensorname, number):
+    sensordata = urllib.request.urlopen(urllib.request.Request(
+        "https://apigtw.vaisala.com/hackjunction2018/saunameasurements/latest?SensorID=" +
+        sensorname + "&limit=" + str(number),
         headers={"Accept": 'application/json'}
     )).read()
+    return json.loads(sensordata)
 
-    json_data = json.loads(returned_data)
 
-    # print('CURRENT TEMPERATURE: ', jsonData[0]['Measurements']['Temperature']['value'], '\n')
-    # print(json.dumps(jsonData, indent=4))
-    first_temp = json_data[0]['Measurements']['Temperature']['value']
-    last_temp = json_data[-1]['Measurements']['Temperature']['value']
+# input: two json measurements, which are the elements of the list returned by get_sensor_data
+# return True if it detects loyly, False if not
+def check_for_loyly(measurement1, measurement2):
+    first_temp = measurement1['Measurements']['Temperature']['value']
+    last_temp = measurement2['Measurements']['Temperature']['value']
 
-    first_unix_timestamp = float(str(json_data[0]['Timestamp']))/1000
+    first_unix_timestamp = float(str(measurement1['Timestamp'])) / 1000
     first_local_timezone = tzlocal.get_localzone()
     first_local_time = datetime.fromtimestamp(first_unix_timestamp, first_local_timezone)
 
-    second_unix_timestamp = float(str(json_data[-1]['Timestamp'])) / 1000
+    second_unix_timestamp = float(str(measurement2['Timestamp'])) / 1000
     second_local_timezone = tzlocal.get_localzone()
     second_local_time = datetime.fromtimestamp(second_unix_timestamp, second_local_timezone)
-    print(first_temp, ' at: ', first_local_time.strftime("%Y-%m-%d %H:%M:%S.%f%z (%Z)"), last_temp, ' at: ', second_local_time.strftime("%Y-%m-%d %H:%M:%S.%f%z (%Z)"))
+    print(first_temp, ' at: ', first_local_time.strftime("%Y-%m-%d %H:%M:%S.%f%z (%Z)"), last_temp, ' at: ',
+          second_local_time.strftime("%Y-%m-%d %H:%M:%S.%f%z (%Z)"))
 
-   # print(first_temp, last_temp)
     if first_temp / last_temp < 0.95:
-        print('Holy loyly burning through the lungs right now')
+        return True
+    else:
+        return False
+
+
+# example usage doing the same thing as before
+'''
+while True:
+    sensordata = get_sensor_data('Stove1', 4)
+    check_for_loyly(sensordata[0], sensordata[-1])
     time.sleep(1)
-
-
-
-
-
-'''for measurement in jsonData:
-    unix_timestamp = float(str(measurement['Timestamp']))/1000
-    local_timezone = tzlocal.get_localzone()
-    local_time = datetime.fromtimestamp(unix_timestamp, local_timezone)
-    print(local_time.strftime("%Y-%m-%d %H:%M:%S.%f%z (%Z)"))
-''''''
-ts = float(jsonData[0]['Timestamp'])
-t = datetime.utcfromtimestamp(ts)
-print('date, time: ', datetime.fromtimestamp(ts))
-print(t.strftime("%Y-%m-%d %H:%M:%S.%f%z (%Z)"))'''
-#print(datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S'))
+'''
