@@ -11,7 +11,7 @@ import struct
 ard_connected = True
 
 if(ard_connected):
-    arduino = serial.Serial('/dev/cu.usbmodem1411', 115200)
+    arduino = serial.Serial('/dev/cu.usbmodem1411', 115200, timeout=.1)
     print(arduino.name)
     time.sleep(2)
 
