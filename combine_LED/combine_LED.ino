@@ -13,21 +13,21 @@
 #define NUM_LEDS 60
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, PIN, NEO_GRB + NEO_KHZ800);
 
-int state = 0;
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200); // set the baud rate
   //Serial.println("Ready"); // print "Ready" once
   strip.show();
+  Fire(20,100,40);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   if(Serial.available() > 0) {
-    char data = Serial.read();
+    char state = Serial.read();
     char str[2];
-    str[0] = data;
+    str[0] = state;
     str[1] = '\0';
     Serial.print(str);
 
@@ -39,13 +39,13 @@ void loop() {
         Fade(0xff, 0x77, 0x00);
         break;
       case s_meh:
-        Fade(0xff, 0x77, 0x00);
+        Fade(0x44, 0x77, 0x33);
         break;
       case s_warm:
         Fade(0xff, 0x77, 0x00);
         break;
       case s_hot:
-        Fade(0xff, 0x77, 0x00);
+        Fade(0x00, 0x77, 0x00);
         break;
       case s_sizzle:
         Fade(0xff, 0x77, 0x00);
@@ -54,11 +54,13 @@ void loop() {
         Fade(0xff, 0x77, 0x00);
         break;
       case s_loyly:
-        Fade(0xff, 0x77, 0x00);
+        Fire(40,70,20);
         break;
       case s_openDoor:
-        Fade(0xff, 0x77, 0x00);
+        Fire(20,100,40);
         break;
+      default:
+        Fire(20,100,40);
     }
   }
 }
@@ -138,7 +140,7 @@ void Fade(byte red, byte green, byte blue){
     showStrip();
     //delay(3);
   }
-
+}
 
 void showStrip() {
  #ifdef ADAFRUIT_NEOPIXEL_H 
