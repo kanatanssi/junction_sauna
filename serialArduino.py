@@ -2,7 +2,7 @@
 # give information outside
 
 ## Serial to Arduino
-import getSensorData as gsd
+import getSensorDataMac as gsd
 import consts
 import serial
 import time

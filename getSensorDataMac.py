@@ -3,15 +3,21 @@ import json
 import time
 from datetime import datetime
 import tzlocal
+import ssl
+
+# This restores the same behavior as before.
+context = ssl._create_unverified_context()
 
 
 # Return a list of json object containg the sensor data
 def get_sensor_data(sensorname, number):
-    sensordata = urllib.request.urlopen(urllib.request.Request(
+    req = urllib.request.urlopen(urllib.request.Request(
         "https://apigtw.vaisala.com/hackjunction2018/saunameasurements/latest?SensorID=" +
         sensorname + "&limit=" + str(number),
         headers={"Accept": 'application/json'}
-    )).read()
+    ), context=context)
+    gcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1)  # Only for gangstars
+    sensordata = req.read()
     return json.loads(sensordata)
 
 
@@ -58,8 +64,8 @@ def get_localtime_from_measurement(measurement):
 
 
 # example usage doing the same thing as before
-while True:
+"""while True:
     sensordata = get_sensor_data('Doorway1', 4)
     if check_for_opendoor(sensordata[0], sensordata[-1]):
         print('DOOR OPEN')
-    time.sleep(1)
+    time.sleep(1)"""
