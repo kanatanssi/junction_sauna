@@ -50,6 +50,7 @@ def check_state():
     count +=1
     if count >= counter:
         count = 0
+        system("say holy löyly its getting hot!")
         return consts.states['s_loyly']
 
     if loyly():

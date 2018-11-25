@@ -1,6 +1,9 @@
 # augmenting the experience inside
 # give information outside
 
+## OBS! This file is actually redundant, Karo hacked the real one
+
+
 ## Serial to Arduino
 import getSensorDataMac as gsd
 import consts
@@ -91,6 +94,7 @@ while True:
     if(runningCounter >= fullCounter):
         state = '7'
         runningCounter = 0
+        system("say holy loyly its getting hot!")
     else:
         runningCounter = runningCounter + 1
         state = '0'
