@@ -1,4 +1,5 @@
 #include <Adafruit_NeoPixel.h>
+#include <Servo.h>
 #define s_nothing '0' // ent [0-10]
 #define s_heatingup '1' //ent [10-100]
 #define s_meh '2' // ent [100-150]
@@ -12,7 +13,25 @@
 #define PIN 10
 #define NUM_LEDS 60
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, PIN, NEO_GRB + NEO_KHZ800);
-//char state;
+char state;
+int counter = 40;
+int count = 0;
+
+int waterServoPin = 9;
+Servo waterServo;  // create a servo object
+
+// Every time water is poured, we increase the angle for the next pour
+// Because if we used the same angle every time no more water would come out after the first
+// When the water is refilled, the Arduino has to be resetted (not very convenient, but works).
+int timesPoured = 0;
+// we increment until this
+int maxTimesPoured = 1;
+
+// the size of the increment for the angle
+int degreeIncrement = 60;
+
+// This is just used to print the angle poured
+int anglePoured = 0;
 
 
 void setup() {
@@ -21,20 +40,26 @@ void setup() {
   //Serial.println("Ready"); // print "Ready" once
   strip.begin();
   strip.show();
-  //state = s_hell;
+  state = s_loyly;
+   waterServo.attach(waterServoPin);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  if(Serial.available() > 0) {
-    char state = Serial.read();
+  while(Serial.available() > 0) {
+    state = Serial.read();
     char str[2];
     str[0] = state;
     str[1] = '\0';
     Serial.print(str);
+  }
+    if(count++>= counter){
+      state = s_loyly;
+      count = 0;
+    }
     switch(state){
       case s_nothing:
-        Fade(0xf0, 0x77, 0x00);
+        Fade(0xff, 0xa5, 0x00);
         break;
       case s_heatingup:
         Fade(0xff, 0x77, 0x00);
@@ -55,6 +80,13 @@ void loop() {
         Fire(20,100,10);
         break;
       case s_loyly:
+        anglePoured = pourWater();
+        //Serial.println("Poured water at angle " + anglePoured);
+        // Make sure the servo is in original position
+        waterServo.write(0);
+        if(timesPoured < maxTimesPoured) {
+            timesPoured++;
+        }
         Fire(50,70,20);
         break;
       case s_openDoor:
@@ -62,9 +94,9 @@ void loop() {
         break;
       default:
         Fire(20,100,40);
-    delay(100);
+      delay(700);
   }
-  }
+  waterServo.write(0);
 }
 
 void Fire(int Cooling, int Sparking, int SpeedDelay) {
@@ -130,7 +162,7 @@ void Fade(byte red, byte green, byte blue){
     b = (k/256.0)*blue;
     setAll(r,g,b);
     showStrip();
-    delay(70);
+    delay(15);
   }
   
 //fade out:
@@ -140,7 +172,7 @@ void Fade(byte red, byte green, byte blue){
     b = (k/256.0)*blue;
     setAll(r,g,b);
     showStrip();
-    delay(80);
+    delay(15);
   }
 }
 
