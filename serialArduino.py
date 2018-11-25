@@ -9,6 +9,10 @@ import time
 import struct
 from os import system
 
+
+counter = 10
+count = 0
+
 ard_connected = True
 
 if(ard_connected):
@@ -28,14 +32,26 @@ def get_enthalpy2():
 
 def loyly():
     sensordata = gsd.get_sensor_data('Stove1', 3)
-    return gsd.check_for_loyly(sensordata[0], sensordata[-1])
+    if (len(sensordata) > 1):
+        return gsd.check_for_loyly(sensordata[0], sensordata[-1])
+    else:
+        return False
 
 def doorOpen():
     sensordata = gsd.get_sensor_data('Doorway1', 4)
-    return gsd.check_for_opendoor(sensordata[0], sensordata[-1])
+    if(len(sensordata)>1):
+        return gsd.check_for_opendoor(sensordata[0], sensordata[-1])
+    else:
+        return False
 
 
 def check_state():
+    global count
+    count +=1
+    if count >= counter:
+        count = 0
+        return consts.states['s_loyly']
+
     if loyly():
         print("loyly")
         system("say holy löyly its getting hot!")
@@ -90,8 +106,8 @@ while True:
         arduino.write(str.encode(str(state)))
         #arduino.write("Hello from Python!")
         print("Sent state " + str(state) + " to arduino")
+        time.sleep(1)
         data = arduino.readline()
         if data:
             print(data.decode())  # strip out the new lines for now
-            time.sleep(1)
             # (better to do .read() in the long run for this reason

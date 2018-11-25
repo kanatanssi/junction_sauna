@@ -12,6 +12,7 @@
 #define PIN 10
 #define NUM_LEDS 60
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, PIN, NEO_GRB + NEO_KHZ800);
+//char state;
 
 
 void setup() {
@@ -20,6 +21,7 @@ void setup() {
   //Serial.println("Ready"); // print "Ready" once
   strip.begin();
   strip.show();
+  //state = s_hell;
 }
 
 void loop() {
@@ -30,10 +32,9 @@ void loop() {
     str[0] = state;
     str[1] = '\0';
     Serial.print(str);
-
-    /*switch(state){
+    switch(state){
       case s_nothing:
-        Fire(40,70,20);
+        Fade(0xf0, 0x77, 0x00);
         break;
       case s_heatingup:
         Fade(0xff, 0x77, 0x00);
@@ -51,17 +52,18 @@ void loop() {
         Fade(0xff, 0x77, 0x00);
         break;
       case s_hell:
-        Fade(0xff, 0x77, 0x00);
+        Fire(20,100,10);
         break;
       case s_loyly:
-        Fire(40,70,20);
+        Fire(50,70,20);
         break;
       case s_openDoor:
-        Fire(20,100,40);
+        Fire(20,120,10);
         break;
       default:
         Fire(20,100,40);
-    }*/
+    delay(100);
+  }
   }
 }
 
@@ -128,7 +130,7 @@ void Fade(byte red, byte green, byte blue){
     b = (k/256.0)*blue;
     setAll(r,g,b);
     showStrip();
-    delay(50);
+    delay(70);
   }
   
 //fade out:
@@ -138,7 +140,7 @@ void Fade(byte red, byte green, byte blue){
     b = (k/256.0)*blue;
     setAll(r,g,b);
     showStrip();
-    delay(50);
+    delay(80);
   }
 }
 
