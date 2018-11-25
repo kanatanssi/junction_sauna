@@ -53,5 +53,6 @@ void loop() {
         break;
     }
   }
+  waterServo.write(0);
 }
 
