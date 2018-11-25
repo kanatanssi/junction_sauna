@@ -7,6 +7,7 @@ import consts
 import serial
 import time
 import struct
+from os import system
 
 ard_connected = True
 
@@ -37,9 +38,11 @@ def doorOpen():
 def check_state():
     if loyly():
         print("loyly")
+        system("say holy löyly its getting hot!")
         return consts.states['s_loyly']
     if doorOpen():
         print("door open")
+        system("say door opened")
         return consts.states['s_openDoor']
 
     ent = get_enthalpy()
@@ -48,18 +51,23 @@ def check_state():
 
     if ent < consts.maxEnt['s_heatingup']:
         print('s_heatingup')
+        system("say s_heatingup")
         return consts.states['s_heatingup']
     if ent < consts.maxEnt['s_meh']:
         print('s_meh')
+        system("say s_meh")
         return consts.states['s_meh']
     if ent < consts.maxEnt['s_warm']:
         print('s_warm')
+        system("say s_warm")
         return consts.states['s_warm']
     if ent < consts.maxEnt['s_hot']:
         print('s_hot')
+        system("say s_hot")
         return consts.states['s_hot']
     if ent < consts.maxEnt['s_sizzle']:
         print('s_sizzle')
+        system("say s_sizzle")
         return consts.states['s_sizzle']
     return consts.states['s_hell']
 
