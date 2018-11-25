@@ -26,9 +26,9 @@ int pourWater() {
   // waterServo.write(0);
 
   // We only want to do 120 degrees at most
-  if(timesPoured <= 4) {
-    timesPoured++; 
-  }
+//  if(timesPoured < maxTimesPoured) {
+//    timesPoured++;
+//  }
   return angle;
 }
 

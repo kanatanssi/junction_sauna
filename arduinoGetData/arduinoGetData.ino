@@ -16,9 +16,11 @@ Servo waterServo;  // create a servo object
 // Because if we used the same angle every time no more water would come out after the first
 // When the water is refilled, the Arduino has to be resetted (not very convenient, but works).
 int timesPoured = 0;
+// we increment until this
+int maxTimesPoured = 1;
 
 // the size of the increment for the angle
-int degreeIncrement = 30;
+int degreeIncrement = 60;
 
 // This is just used to print the angle poured
 int anglePoured = 0;
@@ -64,15 +66,20 @@ void loop() {
         //do something
 
         anglePoured = pourWater();
-        Serial.println("Poured water at angle " + anglePoured);
+        //Serial.println("Poured water at angle " + anglePoured);
+        // Make sure the servo is in original position
+        waterServo.write(0);
+        if(timesPoured < maxTimesPoured) {
+            timesPoured++;
+        }
         
         break;
       case s_openDoor:
         //do something
         break;
     }
+    // Make sure the servo is in original position
+    waterServo.write(0);
   }
-  // Make sure the servo is in original position
-  waterServo.write(0);
 }
 
