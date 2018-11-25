@@ -11,7 +11,7 @@
 #define s_openDoor '8'
 
 #define PIN 10
-#define NUM_LEDS 60
+#define NUM_LEDS 30
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, PIN, NEO_GRB + NEO_KHZ800);
 char state;
 int counter = 40;
@@ -41,7 +41,7 @@ void setup() {
   strip.begin();
   strip.show();
   state = s_loyly;
-   waterServo.attach(waterServoPin);
+   //waterServo.attach(waterServoPin);
 }
 
 void loop() {
@@ -62,35 +62,34 @@ void loop() {
         Fade(0xff, 0xa5, 0x00);
         break;
       case s_heatingup:
-        Fade(0xff, 0x77, 0x00);
+        Fade(0xff, 0xa5, 0x00);
         break;
       case s_meh:
-        Fade(0x44, 0x77, 0x33);
+        Fade(0xff, 0xa5, 0x00);
         break;
       case s_warm:
         Fade(0xff, 0x77, 0x00);
         break;
       case s_hot:
-        Fade(0x00, 0x77, 0x00);
+        Fade(0xff, 0x00, 0x00);
         break;
       case s_sizzle:
-        Fade(0xff, 0x77, 0x00);
+        Fire(20,100,10);
         break;
       case s_hell:
         Fire(20,100,10);
         break;
       case s_loyly:
-        anglePoured = pourWater();
+        //anglePoured = pourWater();
         //Serial.println("Poured water at angle " + anglePoured);
         // Make sure the servo is in original position
-        waterServo.write(0);
-        if(timesPoured < maxTimesPoured) {
-            timesPoured++;
-        }
+        //waterServo.write(120);
+        //delay(1000);
+        //for(int i =0; i<=5; i++)
         Fire(50,70,20);
         break;
       case s_openDoor:
-        Fire(20,120,10);
+        Strobe(0xff, 0x77, 0x00, 10, 100, 1000);
         break;
       default:
         Fire(20,100,40);
@@ -176,6 +175,20 @@ void Fade(byte red, byte green, byte blue){
   }
 }
 
+
+void Strobe(byte red, byte green, byte blue, int StrobeCount, int FlashDelay, int EndPause){
+  for(int j = 0; j < StrobeCount; j++) {
+    setAll(red,green,blue);
+    showStrip();
+    delay(FlashDelay);
+    setAll(0,0,0);
+    showStrip();
+    delay(FlashDelay);
+  }
+ 
+ delay(EndPause);
+}
+
 void showStrip() {
  #ifdef ADAFRUIT_NEOPIXEL_H 
    // NeoPixel
@@ -206,3 +219,4 @@ void setAll(byte red, byte green, byte blue) {
   }
   showStrip();
 }
+

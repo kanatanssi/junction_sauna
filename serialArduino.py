@@ -6,11 +6,13 @@ import getSensorDataMac as gsd
 import consts
 import serial
 import time
+import random as rnd
 import struct
 from os import system
 
 
 counter = 10
+state = 0
 count = 0
 
 ard_connected = True
@@ -46,11 +48,6 @@ def doorOpen():
 
 
 def check_state():
-    global count
-    count +=1
-    if count >= counter:
-        count = 0
-        return consts.states['s_loyly']
 
     if loyly():
         print("loyly")
@@ -62,6 +59,20 @@ def check_state():
         return consts.states['s_openDoor']
 
     ent = get_enthalpy()
+    global count
+    global state
+    count +=1
+    if count < counter:
+        return str(state)
+    if count >= counter:
+        count = 0
+        state = rnd.randint(1,8)
+        #counter = rnd.randint(7,15)
+        if state == 8:
+            count = 5
+        return str(state)
+    #if count >= counter:
+
     if ent < consts.maxEnt['s_nothing']:
         return consts.states['s_nothing']
 
